@@ -15,18 +15,19 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Loader from '../components/Loader';
 
 const LogIn = ({ navigation }) => {
     const [userEmail, setUserEmail] = useState('');
-    const [userPassword, setUserPassword] = useState('');
+    // const [userPassword, setUserPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errortext, setErrortext] = useState('');
 
     const passwordInputRef = createRef();
+
 
     const handleSubmitPress = () => {
         setErrortext('');
@@ -34,12 +35,17 @@ const LogIn = ({ navigation }) => {
             alert('Please fill Email');
             return;
         }
-        if (!userPassword) {
-            alert('Please fill Password');
-            return;
-        }
+
+        // if (!userPassword) {
+        //     alert('Please fill Password');
+        //     return;
+        // }
+
+        // userEmail = "kevun@esti.com";
+        // userPassword = "1";
+
         setLoading(true);
-        let dataToSend = { email: userEmail, password: userPassword };
+        let dataToSend = { email: userEmail };
         let formBody = [];
         for (let key in dataToSend) {
             let encodedKey = encodeURIComponent(key);
@@ -48,9 +54,9 @@ const LogIn = ({ navigation }) => {
         }
         formBody = formBody.join('&');
 
-        fetch('http://localhost:3000/api/user/login', {
-            method: 'POST',
-            body: formBody,
+        fetch(`https://localhost:7098/api/employees/login/${userEmail}`, {
+            method: 'GET',
+            // body: formBody,
             headers: {
                 //Header Defination
                 'Content-Type':
@@ -69,7 +75,7 @@ const LogIn = ({ navigation }) => {
                     navigation.replace('DrawerNavigationRoutes');
                 } else {
                     setErrortext(responseJson.msg);
-                    console.log('Please check your email id or password');
+                    console.log('Please check your email id');
                 }
             })
             .catch((error) => {
@@ -121,7 +127,7 @@ const LogIn = ({ navigation }) => {
                                 blurOnSubmit={false}
                             />
                         </View>
-                        <View style={styles.SectionStyle}>
+                        {/* <View style={styles.SectionStyle}>
                             <TextInput
                                 style={styles.inputStyle}
                                 onChangeText={(UserPassword) =>
@@ -137,7 +143,7 @@ const LogIn = ({ navigation }) => {
                                 underlineColorAndroid="#f000"
                                 returnKeyType="next"
                             />
-                        </View>
+                        </View> */}
                         {errortext != '' ? (
                             <Text style={styles.errorTextStyle}>
                                 {errortext}
@@ -149,11 +155,6 @@ const LogIn = ({ navigation }) => {
                             onPress={handleSubmitPress}>
                             <Text style={styles.buttonTextStyle}>LOGIN</Text>
                         </TouchableOpacity>
-                        <Text
-                            style={styles.registerTextStyle}
-                            onPress={() => navigation.navigate('RegisterScreen')}>
-                            New Here ? Register
-                        </Text>
                     </KeyboardAvoidingView>
                 </View>
             </ScrollView>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     buttonStyle: {
-        backgroundColor: '#7DE24E',
+        backgroundColor: 'red',
         borderWidth: 0,
         color: '#FFFFFF',
         borderColor: '#7DE24E',
